@@ -122,10 +122,12 @@ export async function authenticate(
     prevState: string | undefined,
     formData: FormData,
 ) {
-    try{
-        await signIn('credemtials', formData);
-    }catch (error) {
-        if(error instanceof AuthError) {
+    const callbackUrl = (formData.get('callbackUrl') as string) || '/dashboard';
+    try {
+        await signIn('credentials', formData);
+        redirect(callbackUrl);
+    } catch (error) {
+        if (error instanceof AuthError) {
             switch (error.type) {
                 case 'CredentialsSignin':
                     return 'Invalid credentials.';
